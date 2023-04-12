@@ -1,4 +1,10 @@
 ## AAVKI
+
+
+#### Description
+A pipeline for NGS analysis of Genome-wide Integration Site of AAV-Donor identified by sequencing (GISA-seq).
+
+
 ```shell
 usage: AAVKI_pipeline.py [-h] -g GENOME -hr HOMOARM -s SITE [-ap ADAPTORS] [-tp TRIM_PARS] [-v]
 
