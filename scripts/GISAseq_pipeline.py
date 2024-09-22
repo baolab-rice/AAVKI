@@ -61,7 +61,7 @@ def main():
         bed_OT_HDR = samtobed(sam_OT_HDR)
         bed_OT_NHEJ = samtobed(sam_OT_NHEJ)
     
-        run_annotation(bed_OT_HDR,args.annotation, args.genome_name, args.plprogram)
+        run_annotation(bed_OT_HDR,args.annotation, args.plprogram, args.genome_name)
         run_annotation(bed_OT_NHEJ,args.annotation,  args.plprogram, args.genome_name)
         print("Annotation done.")
 
