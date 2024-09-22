@@ -3,13 +3,10 @@ from Bio import SeqIO
 
 def trim_reads(read1,read2,adaptors,pars):
 
-    #[PATH] Input the path to trimmomatic here.
-    path_to_trimmomatic = "/Users/mingmingcao/opt/anaconda3/bin"
     threads = 4
-   
-    # Becaouse of forcely merging, we need to keep as long as read1 & read2
-    arguments = ['{}/trimmomatic PE -threads {} {} {} {} {} {} {} ILLUMINACLIP:{}/:2:30:10 {}'  
-                .format(path_to_trimmomatic,
+
+    arguments = ['trimmomatic PE -threads {} {} {} {} {} {} {} ILLUMINACLIP:{}/:2:30:10 {}'  
+                .format(
                         threads,
                         read1,
                         read2,
@@ -28,12 +25,10 @@ def trim_reads(read1,read2,adaptors,pars):
 
 def merge_reads(read1,read2):
 
-    #[PATH] Input the path to flash here.
-    path_to_flash = "/Users/mingmingcao/Desktop/Software/FLASH/FLASH-1.2.11"    
+    ## FLASH 1.2.11 was used
 
-    arguments = ['{}/flash -M600 {} {} 2>&1 | tee flash.log'  
-                .format(path_to_flash,
-                        read1,
+    arguments = ['flash -M600 {} {} 2>&1 | tee flash.log'  
+                .format(read1,
                         read2)]
     
     process = Popen(args = arguments,
