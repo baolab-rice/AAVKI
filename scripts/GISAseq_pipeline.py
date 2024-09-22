@@ -1,16 +1,20 @@
-from AAVKI_QC_and_merge import run_QC_and_merge
-from AAVKI_align import run_align, samtobed
-from AAVKI_layered_filter import run_layered_filters
-from AAVKI_OT_quantification import run_quantification, run_ON_quantification
-from AAVKI_annotation import run_annotation
+from GISAseq_QC_and_merge import run_QC_and_merge
+from GISAseq_align import run_align, samtobed
+from GISAseq_layered_filter import run_layered_filters
+from GISAseq_OT_quantification import run_quantification, run_ON_quantification
+from GISAseq_annotation import run_annotation
 import re
 import argparse
 
 """
 Required programs: 
 trimmomatic >= 0.39
-flash 1.2
+flash >= 1.2.11
 bwa >= 0.7.17-r1188
+samtools >= 1.20
+bedtools >= v2.30.0
+perl >= v5.30.3 
+python >= 3.8
 """
 
 """
@@ -18,7 +22,9 @@ This program should be run in the folder with sample.
 """
 
 """
-Usage: python3 AAVKI_pipeline.py -r1 <read1.fq> -r2 <read2.fq> -g <artificial_genome.fa> -bc "NNNNNNNN" -ap <adaptors.fa>
+Usage: python3 GISAseq_pipeline.py -r1 <read1.fq> -r2 <read2.fq> -g <artificial_genome.fa> -bc "NNNNNNNN" -ap <adaptors.fa>
+
+For gene annotation, the -a, -gn and -pl flags are required,
 """
 
 
@@ -31,17 +37,6 @@ def main():
     # # Sequence alignment
     samfile = run_align(merged_reads,args.genome)
     print("Sequence alingment done.")
-
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/26141.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/36145.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/46149.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/56153.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/76147.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/86143.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/96151.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/106155.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/116159.r2.umitagged_filtered.sam"
-    # samfile = "/Users/mingmingcao/Desktop/Apoai/2_21_23_APOAI_OT_NGS_UMI/newrun/control.r2.umitagged_filtered.sam"
 
     # Layered filters
     OT_HDR_file,OT_NHEJ_file,ON_HDR_file,ON_NHEJ_file = run_layered_filters(samfile,int(args.homoarm),args.site)
@@ -59,15 +54,16 @@ def main():
     print("Quantification done.")
 
     # Annotation
-    sam_OT_HDR = run_align(file_OT_HDR,args.genome)
-    sam_OT_NHEJ = run_align(file_OT_NHEJ,args.genome)
-
-    bed_OT_HDR = samtobed(sam_OT_HDR)
-    bed_OT_NHEJ = samtobed(sam_OT_NHEJ)
-
-    run_annotation(bed_OT_HDR,args.annotation)
-    run_annotation(bed_OT_NHEJ,args.annotation)
-    print("Annotation done.")
+    if args.annotation != "":
+        sam_OT_HDR = run_align(file_OT_HDR,args.genome)
+        sam_OT_NHEJ = run_align(file_OT_NHEJ,args.genome)
+    
+        bed_OT_HDR = samtobed(sam_OT_HDR)
+        bed_OT_NHEJ = samtobed(sam_OT_NHEJ)
+    
+        run_annotation(bed_OT_HDR,args.annotation, args.genome_name, args.plprogram)
+        run_annotation(bed_OT_NHEJ,args.annotation,  args.plprogram, args.genome_name)
+        print("Annotation done.")
 
 
 
@@ -85,7 +81,7 @@ if __name__ == '__main__':
     # parser.add_argument('-r1','--read1',required=True,help="[Required] Read 1 sequence file, .fastq or .fastq.gz")
     parser.add_argument('-r2','--read2',required=True,help="[Required] Read 2 sequence file, .fastq or .fastq.gz")
     parser.add_argument('-g','--genome',required=True,help="[Required] Indexed artificial genome file, .fasta")
-
+    
     ## Non-specific PCR filter
     parser.add_argument('-bc','--barcode',required=True,help="[Required] Downstream 8bp barcode after FWD primer.")
 
@@ -95,20 +91,19 @@ if __name__ == '__main__':
     ## Integrated site position
     parser.add_argument('-s','--site',required=True,help="[Required] On-target integration site position. The format is chr:number. (e.g. chr9:46230897)")
 
-    ## Annotation
-    parser.add_argument('-a','--annotation', required=True,help="[Required] Annoteated file for input genome, .GTF format.")
-
     # Optional arguments
     ## Trim in QC
     ### Adapter trimming
     parser.add_argument('-ap','--adaptors',default=False,help="[Optional] A FASTA file containing all adaptors need to be trimmed.")
     ### Parameters for trimmomatic
     parser.add_argument('-tp','--trim_pars',default="",\
-        help="[Optional] Arguments and parameters for trimmomatic. ")
+        help="[Optional] Arguments and parameters for trimmomatic.")
 
-    ## Verbal mode 
-    parser.add_argument('-v','--verbal',default=False,action='store_true',help="[Optional] Run pipeline in verbal mode.\
-        (DEFAULT = False)")
+    ## Annotation
+    parser.add_argument('-a','--annotation', default= "", help="[Annotation] Annoteated file for input genome, .GTF format.")
+    parser.add_argument('-gn','--genome_name',default="mm10", help="[Annotation] Name of the input genome, default is 'mm10'")
+    parser.add_argument('-pl','--plprogram', required=False, help="[Annotation] where is the annotatePeaks.pl")
+
 
     args = parser.parse_args()
 
