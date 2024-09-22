@@ -15,7 +15,7 @@ python >= 3.8
 annotatePeaks (http://homer.ucsd.edu/homer/ngs/annotation.html)
 
 ```shell
-usage: AAVKI_pipeline.py [-h] -g GENOME -hr HOMOARM -s SITE [-ap ADAPTORS] [-tp TRIM_PARS] [-v]
+usage: AAVKI_pipeline.py [-h] -g GENOME -hr HOMOARM -s SITE [-ap ADAPTORS] [-tp TRIM_PARS] [-a ANNOTATION] [-gn GENOME_NAME] [-pl PLPROGRAM]
 
 AAVKI pipeline is for quantification of CRIPSR editing outcomes with AAV integration. This pipeline
 needs artificial genome with AAV vector used in experiment. For the artificial genome preparation
@@ -33,9 +33,15 @@ optional arguments:
   -hr HOMOARM, --homoarm HOMOARM
                         [Required] 3'HR between AAV_donor and target region.
   -s SITE, --site SITE  [Required] On-target integration site position. The format is chr:number. (e.g. chr9:46230897)
-  -a ANNOTATION, --annotation ANNOTATION
-                        [Required] Annoteated file for input genome, .GTF format.
+
   -ap ADAPTORS, --adaptors ADAPTORS
                         [Optional] A FASTA file containing all adaptors need to be trimmed.
   -tp TRIM_PARS, --trim_pars TRIM_PARS
                         [Optional] Arguments and parameters for trimmomatic.
+  -a ANNOTATION, --annotation ANNOTATION
+                        [Annotation] Annoteated file for input genome, .GTF format.
+  -gn GENOME_NAME, --genome_name GENOME_NAME
+                        [Annotation] Name of the input genome, default is 'mm10'
+  -pl PLPROGRAM, --plprogram PLPROGRAM
+                        [Annotation] where is the annotatePeaks.pl
+
