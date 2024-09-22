@@ -5,13 +5,20 @@
 A pipeline for NGS analysis of Genome-wide Integration Site of AAV-Donor identified by sequencing (GISA-seq).
 
 #### Required tools&packages
-trimmomatic >= 0.39
+trimmomatic >= 0.39 
+
 flash >= 1.2.11
+
 bwa >= 0.7.17-r1188
+
 samtools >= 1.20
+
 bedtools >= v2.30.0
+
 perl >= v5.30.3 
+
 python >= 3.8
+
 annotatePeaks (http://homer.ucsd.edu/homer/ngs/annotation.html)
 
 ```shell
