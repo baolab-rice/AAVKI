@@ -69,7 +69,7 @@ def main():
 
 if __name__ == '__main__':
 
-    desc = "AAVKI pipeline is for quantification of CRIPSR editing outcomes \
+    desc = "GISA-seq pipeline is for quantification of CRIPSR editing outcomes \
         with AAV integration. This pipeline needs artificial genome with AAV vector \
         used in experiment. For the artificial genome preparation details, see the part \
         'Artifical Genome Prep' in our github."
