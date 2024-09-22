@@ -8,10 +8,9 @@ import argparse
 
 """
 Required programs: 
-trimmomatic [version]
-flash [version]
-bwa [version] 
-Biopython [version]
+trimmomatic >= 0.39
+flash 1.2
+bwa >= 0.7.17-r1188
 """
 
 """
