@@ -1,5 +1,5 @@
 from subprocess import Popen, PIPE
-def run_annotation(bedfile,annfile):
+def run_annotation(bedfile,annfile, plprogram, genome):
 
     # bedlines = []
 
@@ -37,9 +37,10 @@ def run_annotation(bedfile,annfile):
 
     filename = bedfile[:-4] + "_annotated.txt"
 
-    arguments = ['perl /Users/mingmingcao/Desktop/Programs/Homer/bin/annotatePeaks.pl {} {} -gtf {} > {}'  
-                .format(bedfile,
-                        "mm10",
+    arguments = ['perl {} {} {} -gtf {} > {}'  
+                .format(plprogram,
+                        bedfile,
+                        genome, # default is mouse and can be change to others
                         annfile,
                         filename)]
     
