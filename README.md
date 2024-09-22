@@ -15,11 +15,7 @@ python >= 3.8
 annotatePeaks (http://homer.ucsd.edu/homer/ngs/annotation.html)
 
 ```shell
-usage: AAVKI_pipeline.py [-h] -g GENOME -hr HOMOARM -s SITE [-ap ADAPTORS] [-tp TRIM_PARS] [-a ANNOTATION] [-gn GENOME_NAME] [-pl PLPROGRAM]
-
-AAVKI pipeline is for quantification of CRIPSR editing outcomes with AAV integration. This pipeline
-needs artificial genome with AAV vector used in experiment. For the artificial genome preparation
-details, see the part 'Artifical Genome Prep' in our github.
+usage: GISAseq_pipeline.py [-h] -g GENOME -hr HOMOARM -s SITE [-ap ADAPTORS] [-tp TRIM_PARS] [-a ANNOTATION] [-gn GENOME_NAME] [-pl PLPROGRAM]
 
 optional arguments:
 
